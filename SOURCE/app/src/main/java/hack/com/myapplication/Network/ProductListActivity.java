@@ -30,10 +30,15 @@ public class ProductListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_list);
 
         init();
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(ProductListActivity.this, 2);
+        adapter.arrayList = arrayList;
+        adapter.context = ProductListActivity.this;
+        rvProductList.setAdapter(adapter);
+        rvProductList.setLayoutManager(gridLayoutManager);
     }
 
     void init() {
-
+        rvProductList = findViewById(R.id.rv_product_list);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.json-generator.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -45,9 +50,9 @@ public class ProductListActivity extends AppCompatActivity {
                     ProductList productList = response.body();
                     if (productList.getStatus() == 1) {
                         //code here
-                        rvProductList = findViewById(R.id.rv_product_list);
+
                         for (int i=0; i<productList.getData().size(); i++){
-                            Data data = new Data();
+                            data = new Data();
                             data.setCode(Integer.parseInt(productList.getData().get(i).getCode().toString()));
                             data.setWeight(Integer.parseInt(productList.getData().get(i).getWeight().toString()));
                             data.setBasePrice(Integer.parseInt(productList.getData().get(i).getBasePrice().toString()));
@@ -59,13 +64,8 @@ public class ProductListActivity extends AppCompatActivity {
                             data.setName(productList.getData().get(i).getName());
 
                             arrayList.add(data);
-
                         }
-                        GridLayoutManager gridLayoutManager = new GridLayoutManager(ProductListActivity.this, 2);
-                        adapter.arrayList = arrayList;
-                        adapter.context = ProductListActivity.this;
-                        rvProductList.setAdapter(adapter);
-                        rvProductList.setLayoutManager(gridLayoutManager);
+                        Log.d("d","d");
 
                     } else {
                         Toast.makeText(ProductListActivity.this, "error", Toast.LENGTH_SHORT).show();
@@ -75,7 +75,7 @@ public class ProductListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ProductList> call, Throwable t) {
-
+                Log.d("loi", "onFailure: "+t.toString());
             }
         });
     }
